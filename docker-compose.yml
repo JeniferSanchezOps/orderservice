@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  orderservice:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DEMO_MODE=true
+      - ENCARGO_API_BASE=https://api.encargo.example
+      - ENCARGO_API_KEY=
+    restart: unless-stopped
