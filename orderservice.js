@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-const ENCARGO_API_BASE = process.env.ENCARGO_API_BASE || 'https://api.encargo.example';
+//const ENCARGO_API_BASE = process.env.ENCARGO_API_BASE || 'https://api.encargo.example'; //solopara local 
 const ENCARGO_API_KEY = process.env.ENCARGO_API_KEY || '';
 const DEMO_MODE = (process.env.DEMO_MODE === 'true') || (process.env.DEMO === 'true');
 

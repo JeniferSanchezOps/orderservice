@@ -1,0 +1,85 @@
+# Replace <DOCKER_USERNAME>, <DOCKER_TOKEN>, <YOUR_EMAIL> before applying
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: orders
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dockerhub-secret
+  namespace: orders
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: "" # replace with base64 of dockerconfigjson OR create secret with kubectl (recommended)
+---
+# Recommended command to create the registry secret (run in terminal and skip the Secret above):
+# kubectl create secret docker-registry dockerhub-secret \
+#   --docker-server=https://index.docker.io/v1/ \
+#   --docker-username=<DOCKER_USERNAME> \
+#   --docker-password=<DOCKER_TOKEN> \
+#   --docker-email=<YOUR_EMAIL> \
+#   -n orders
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderservice-deployment
+  namespace: orders
+  labels:
+    app: orderservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orderservice
+  template:
+    metadata:
+      labels:
+        app: orderservice
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - name: orderservice
+          image: jensanchez/orderservice:v7
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DEMO_MODE
+              value: "true"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice-lb
+  namespace: orders
+spec:
+  type: LoadBalancer
+  selector:
+    app: orderservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

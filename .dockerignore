@@ -1,4 +1,26 @@
+# Node extras
 node_modules
 npm-debug.log
 .env
+
+# No copiar archivos de infraestructura
+../terraform/
+../k8s/
+../infra/
+../main.tf
+../*.tf
+../*.tfstate*
+../terraform.tfstate
+../terraform.tfstate.backup
+.terraform.*
+
+# No copiar imágenes ni artefactos locales
+*.zip
+*.tar
+*.gz
+
+# No copiar carpetas ocultas
 .git
+.gitignore
+ docker-compose.yml
+ Dockerfile

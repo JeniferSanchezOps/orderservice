@@ -1,0 +1,10 @@
+project_id       = "iron-crane-478902-g6"
+region           = "us-central1"
+zone             = "us-central1-a"
+credentials_file = "/Users/jenifersanchez/tf-gke-sa-key.json"
+cluster_name     = "orders-cluster"
+disk_size_gb = 50
+node_count       = 2
+machine_type     = "e2-medium"
+replicas         = 3
+image            = "jensanchez/orderservice:v7"

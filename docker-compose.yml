@@ -7,6 +7,5 @@ services:
     environment:
       - PORT=3000
       - DEMO_MODE=true
-      - ENCARGO_API_BASE=https://api.encargo.example
       - ENCARGO_API_KEY=
     restart: unless-stopped
